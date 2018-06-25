@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Product;
 
-class ProductsController extends Controller
+class ProductsController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -14,21 +14,9 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
-
-        return response()->json([
-            'data' => $this->transformCollection($products)
-        ], 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $this->respond([
+            'data' => $this->transformCollection(Product::all())
+        ]);
     }
 
     /**
@@ -53,27 +41,12 @@ class ProductsController extends Controller
         $product = Product::find($id);
 
         if ( ! $product) {
-            return response()->json([
-                'error' => [
-                    'message' => 'Product does not exist.'
-                ]
-            ], 404);
+            return $this->respondNotFound('Product does not exist.');
         }
 
-        return response()->json([
+        return $this->respond([
             'data' => $this->transform($product->toArray())
-        ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        ]);
     }
 
     /**
