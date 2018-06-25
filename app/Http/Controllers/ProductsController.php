@@ -14,7 +14,11 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        return Product::all();
+        $products = Product::all();
+
+        return response()->json([
+            'data' => $products->toArray()
+        ], 200);
     }
 
     /**
@@ -46,7 +50,19 @@ class ProductsController extends Controller
      */
     public function show($id)
     {
-        //
+        $product = Product::find($id);
+
+        if ( ! $product) {
+            return response()->json([
+                'error' => [
+                    'message' => 'Product does not exist.'
+                ]
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => $product->toArray()
+        ], 200);
     }
 
     /**
