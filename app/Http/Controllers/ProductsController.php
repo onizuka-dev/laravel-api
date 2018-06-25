@@ -17,7 +17,7 @@ class ProductsController extends Controller
         $products = Product::all();
 
         return response()->json([
-            'data' => $products->toArray()
+            'data' => $this->transformCollection($products)
         ], 200);
     }
 
@@ -61,7 +61,7 @@ class ProductsController extends Controller
         }
 
         return response()->json([
-            'data' => $product->toArray()
+            'data' => $this->transform($product->toArray())
         ], 200);
     }
 
@@ -97,5 +97,20 @@ class ProductsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function transformCollection ($products)
+    {
+        return array_map([$this, 'transform'], $products->toArray());
+    }
+
+    private function transform ($product)
+    {
+        return [
+            'code' => $product['code'],
+            'is_active' => (bool) $product['active'],
+            'description' => $product['description'],
+            'price' => $product['price']
+        ];
     }
 }
