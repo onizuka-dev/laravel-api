@@ -2,11 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Pdv\Transformers\ProductTransformer;
 use Illuminate\Http\Request;
 use App\Product;
 
 class ProductsController extends ApiController
 {
+    /**
+     * @var Pdv\Transformers\ProductTransformer
+     */
+    protected $productTransformer;
+
+    function __construct(ProductTransformer $productTransformer)
+    {
+        $this->productTransformer = $productTransformer;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,8 +24,10 @@ class ProductsController extends ApiController
      */
     public function index()
     {
+        $products = Product::all();
+
         return $this->respond([
-            'data' => $this->transformCollection(Product::all())
+            'data' => $this->productTransformer->transformCollection($products->all())
         ]);
     }
 
@@ -45,7 +57,7 @@ class ProductsController extends ApiController
         }
 
         return $this->respond([
-            'data' => $this->transform($product->toArray())
+            'data' => $this->productTransformer->transform($product)
         ]);
     }
 
@@ -70,20 +82,5 @@ class ProductsController extends ApiController
     public function destroy($id)
     {
         //
-    }
-
-    private function transformCollection ($products)
-    {
-        return array_map([$this, 'transform'], $products->toArray());
-    }
-
-    private function transform ($product)
-    {
-        return [
-            'code' => $product['code'],
-            'is_active' => (bool) $product['active'],
-            'description' => $product['description'],
-            'price' => $product['price']
-        ];
     }
 }
