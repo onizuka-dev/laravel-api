@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Response;
+
 class ApiController extends Controller {
-    protected $statusCode = 200;
+    protected $statusCode = Response::HTTP_OK;
 
     /**
      * @return mixed
@@ -24,9 +26,16 @@ class ApiController extends Controller {
         return $this;
     }
 
+    public function respondCreated($message = 'Successfully created!')
+    {
+        return $this->setStatusCode(Response::HTTP_CREATED)->respond([
+            'message' => $message
+        ]);
+    }
+
     public function respondNotFound($message = 'Not Found!')
     {
-        return $this->setStatusCode(404)->respondWithError($message);
+        return $this->setStatusCode(Response::HTTP_NOT_FOUND)->respondWithError($message);
     }
 
     public function respond($data, $headers = [])
