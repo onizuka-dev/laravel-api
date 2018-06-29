@@ -5,7 +5,12 @@ use App\Product;
 
 class DatabaseSeeder extends Seeder
 {
-    private $tables = ['products'];
+    private $tables = [
+        'products',
+        'categories',
+        'taxes',
+        'product_tax'
+    ];
 
     /**
      * Seed the application's database.
@@ -14,12 +19,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->truncate_all_tables();
+        $this->truncateTables();
+        // $this->call(CategoriesTableSeeder::class);
         $this->call(ProductsTableSeeder::class);
+        $this->call(TaxTableSeeder::class);
+        $this->call(ProductTaxTableSeeder::class);
         // $this->call(UsersTableSeeder::class);
     }
 
-    private function truncate_all_tables ()
+    private function truncateTables ()
     {
         foreach ($this->tables as $table) {
             \DB::table($table)->truncate();
