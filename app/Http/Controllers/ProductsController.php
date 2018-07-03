@@ -39,7 +39,16 @@ class ProductsController extends ApiController
      */
     public function store(Request $request)
     {
-        //
+
+        if ( ! $request->description || ! $request->code) {
+            return $this->setStatusCode(422)
+                        ->respondWithError('Parameters failed validation for a product.');
+        }
+
+        // TODO Add validations (not only here!)
+        $product = Product::create($request->all());
+
+        return $this->respondCreated($product, 'Product successfully created.');
     }
 
     /**

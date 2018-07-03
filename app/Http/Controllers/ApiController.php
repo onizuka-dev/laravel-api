@@ -26,9 +26,10 @@ class ApiController extends Controller {
         return $this;
     }
 
-    public function respondCreated($message = 'Successfully created!')
+    public function respondCreated($data = [], $message = 'Successfully created!')
     {
         return $this->setStatusCode(Response::HTTP_CREATED)->respond([
+            'data' => $data,
             'message' => $message
         ]);
     }
