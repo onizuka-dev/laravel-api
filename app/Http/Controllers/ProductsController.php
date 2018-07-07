@@ -25,11 +25,12 @@ class ProductsController extends ApiController
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::paginate();
 
-        return $this->respond([
-            'data' => $this->productTransformer->transformCollection($products->all())
-        ]);
+        return $this->respondWithPagination(
+            $products,
+            ['data' => $this->productTransformer->transformCollection((array)$products->all())]
+        );
     }
 
     /**

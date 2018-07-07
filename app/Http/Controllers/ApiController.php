@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Response;
 
 class ApiController extends Controller {
@@ -24,6 +25,21 @@ class ApiController extends Controller {
         $this->statusCode = $statusCode;
 
         return $this;
+    }
+
+    public function respondWithPagination(LengthAwarePaginator $pagination, $data)
+    {
+        $data = array_merge($data, [
+            'pagination' => [
+                'total' => $pagination->total(),
+                'count' => $pagination->count(),
+                'current_page' => $pagination->currentPage(),
+                'last_page' => $pagination->lastPage(),
+                'per_page' => $pagination->perPage()
+            ]
+        ]);
+
+        return $this->respond($data);
     }
 
     public function respondCreated($data = [], $message = 'Successfully created!')
