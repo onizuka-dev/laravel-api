@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Pdv\Transformers\ProductTransformer;
 use Illuminate\Http\Request;
 use App\Product;
+use Validator;
 
 class ProductsController extends ApiController
 {
@@ -39,13 +40,19 @@ class ProductsController extends ApiController
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'category' => 'numeric',
+            'code' => 'required|unique:products|max:50',
+            'active' => 'boolean',
+            'description' => 'required|max:255',
+            'price' => 'required|numeric'
+        ]);
 
-        if ( ! $request->description || ! $request->code) {
-            return $this->setStatusCode(422)
-                        ->respondWithError('Parameters failed validation for a product.');
+        if ($validator->fails()) {
+            return $this->respondNotValid($validator->errors());
         }
 
-        // TODO Add validations (not only here!)
+        // TODO refactor, be explicit with fields
         $product = Product::create($request->all());
 
         return $this->respondCreated($product, 'Product successfully created.');
@@ -79,7 +86,30 @@ class ProductsController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'category_id' => 'numeric',
+            'code' => 'unique:products|max:50',
+            'active' => 'boolean',
+            'description' => 'required|max:255',
+            'price' => 'required|numeric'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondNotValid($validator->errors());
+        }
+
+        $product = Product::find($id);
+
+        if ( ! $product) {
+            return $this->respondNotFound('Product does not exist.');
+        }
+
+        $product->update([
+            'description' => $request->description,
+            'price' => $request->price
+        ]);
+
+        return $this->respondUpdated($product, 'Product successfully updated.');
     }
 
     /**

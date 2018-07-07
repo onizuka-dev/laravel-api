@@ -34,9 +34,24 @@ class ApiController extends Controller {
         ]);
     }
 
+    public function respondUpdated($data = [], $message = 'Successfully updated!')
+    {
+        return $this->setStatusCode(Response::HTTP_ACCEPTED)->respond([
+            'data' => $data,
+            'message' => $message
+        ]);
+    }
+
     public function respondNotFound($message = 'Not Found!')
     {
         return $this->setStatusCode(Response::HTTP_NOT_FOUND)->respondWithError($message);
+    }
+
+    public function respondNotValid($errorBag = [])
+    {
+        return $this->setStatusCode(
+            Response::HTTP_UNPROCESSABLE_ENTITY)
+                ->respondWithValidationErrors($errorBag);
     }
 
     public function respond($data, $headers = [])
@@ -51,6 +66,14 @@ class ApiController extends Controller {
                 'message' => $message,
                 'status_code' => $this->getStatusCode()
             ]
+        ]);
+    }
+
+    public function respondWithValidationErrors($errorBag)
+    {
+        return $this->respond([
+            'errors' => $errorBag,
+            'status_code' => $this->getStatusCode()
         ]);
     }
 }
