@@ -121,6 +121,14 @@ class ProductsController extends ApiController
      */
     public function destroy($id)
     {
-        //
+        $product = Product::find($id);
+
+        if ( ! $product) {
+            return $this->respondNotFound('Product does not exist.');
+        }
+
+        $product->delete();
+
+        return $this->respondDeleted($product, 'Product successfully deleted.');
     }
 }
