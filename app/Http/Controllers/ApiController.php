@@ -58,6 +58,14 @@ class ApiController extends Controller {
         ]);
     }
 
+    public function respondDeleted($data = [], $message = 'Successfully deleted!')
+    {
+        return $this->setStatusCode(Response::HTTP_ACCEPTED)->respond([
+            'data' => $data,
+            'message' => $message
+        ]);
+    }
+
     public function respondNotFound($message = 'Not Found!')
     {
         return $this->setStatusCode(Response::HTTP_NOT_FOUND)->respondWithError($message);
