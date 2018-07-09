@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Pdv\Transformers;
+namespace App\Api\Transformers;
 
 class TaxTransformer extends Transformer
 {

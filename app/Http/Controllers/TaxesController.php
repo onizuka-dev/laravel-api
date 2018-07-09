@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Pdv\Transformers\TaxTransformer;
+use App\Api\Transformers\TaxTransformer;
 use Illuminate\Http\Request;
 use App\Tax;
 

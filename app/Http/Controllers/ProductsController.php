@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Pdv\Transformers\ProductTransformer;
+use App\Api\Transformers\ProductTransformer;
 use Illuminate\Http\Request;
 use App\Product;
 use Validator;
@@ -10,7 +10,7 @@ use Validator;
 class ProductsController extends ApiController
 {
     /**
-     * @var Pdv\Transformers\ProductTransformer
+     * @var Api\Transformers\ProductTransformer
      */
     protected $productTransformer;
 
